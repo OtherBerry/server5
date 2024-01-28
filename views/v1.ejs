@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+    <h1>hiiiiiii</h1>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            var url_string = window.location.href;
+
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                deviceType = 'Mobile or Android';
+            } else if (/Tablet|iPad/i.test(navigator.userAgent)) {
+                deviceType = 'Tablet or iPad';
+            } else {
+                deviceType = 'Desktop';
+            }
+            console.log('here')
+
+            // Screen Size
+            const screenWidth = window.screen.width;
+            const screenHeight = window.screen.height;
+
+            // Orientation
+            const isPortrait = window.screen.height > window.screen.width;
+
+            // Device Pixel Ratio
+            const devicePixelRatio = window.devicePixelRatio;
+
+            // Device Platform
+            const platform = navigator.platform;
+
+            // Create an object to hold the device information
+            const deviceInfo = {
+                deviceType,
+                screenSize: `${screenWidth} x ${screenHeight}`,
+                orientation: isPortrait ? 'Portrait' : 'Landscape',
+                devicePixelRatio,
+                platform: platform
+            };
+
+
+            // var screenWidth = window.screen.width;
+            // var screenHeight = window.screen.height;
+            // var url = new URL(url_string);
+            // var campaignId = url.searchParams.get("campaign_id");
+            // var countrY = url.searchParams.get("country");
+            // var sourceId = url.searchParams.get("source_id");
+
+            // Send the screen size to the Flask server
+            fetch('/track-user-parameters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ deviceInfo, screenWidth, screenHeight }),
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+                .then(data => {
+                    // Handle the parsed data
+                    console.log('Response data:', data);
+
+                    // Check if a 'goto' field exists in the response
+                    if (data && data.goto) {
+                        // Redirect to the specified URL
+                        window.location.href = data.goto;
+                    } else {
+                        console.error('Invalid response format. Missing "goto" field.');
+                    }
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error.message);
+                });
+        });
+
+    </script>
+</body>
+
+</html>
+
+
+
+<!-- <script>
+    // Fetch data from the server using a POST request
+    fetch('/redirect', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the parsed data
+            console.log('Response data:', data);
+
+            // Check if a 'goto' field exists in the response
+            if (data.goto) {
+                // Redirect to the specified URL
+                window.location.href = data.goto;
+            }
+        })
+        .catch(error => {
+            // Handle errors
+            console.error('Error:', error.message);
+        });
+</script> -->
+<!-- 
+
+fetch('/track-user-parameters', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ deviceInfo, screenWidth, screenHeight }),
+}).then((response) => {
+    if (response.ok) {
+        console.log("User parameters sent to the backend successfully.");
+    } else {
+        console.error("Failed to send user parameters to the backend.");
+    }
+}).then(response => response.json())
+    .then(data => {
+        // Handle the parsed data
+        console.log('Response data:', data);
+
+        // Check if a 'goto' field exists in the response
+        if (data.goto) {
+            // Redirect to the specified URL
+            window.location.href = data.goto;
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+    })
+}); -->
