@@ -5,7 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
+    "build": "ng build",
+    "heroku-postbuild": "ng build --prod",
     "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "author": "",
   "license": "ISC",
