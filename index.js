@@ -28,12 +28,11 @@ var values = {
 }
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost', // Use the hostname of your local PostgreSQL server
-    database: 'postgres',
-    password: 'GH@investing20',
-    port: 5434, // PostgreSQL default port
-});
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
