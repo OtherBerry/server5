@@ -16,7 +16,7 @@ var browser_name = null; var browser_version; var browser_major_version;
 var os_name; var os_version; var enginge_name; var engine_version; var bitness;
 var device_type; var screen_size; var orientation; var device_pixle_ration;
 var platform; var motion_Reduce_pref; var color_scheme_pre; var architecture;
-var Datetime; var screenHeight; var screenWidth; var was_redirected;
+var Datetime; var screenHeight; var screenWidth; var was_redirected;var user_plagin
 
 var values = {
     user_IP, user_country, user_state, browser_name,
@@ -24,7 +24,8 @@ var values = {
     os_version, enginge_name, engine_version, bitness,
     device_type, screen_size, orientation,
     device_pixle_ration, platform, motion_Reduce_pref,
-    color_scheme_pre, architecture, Datetime, screenHeight, screenWidth, was_redirected
+    color_scheme_pre, architecture, Datetime, screenHeight, screenWidth, was_redirected,
+    user_plagin
 }
 
 const pool = new Pool({
@@ -52,6 +53,11 @@ app.get("/", (req, res) => {
     res.render(__dirname + "/views/v1.ejs");
 });
 
+
+app.get("/v2", (req, res) => {
+    res.render(__dirname + "/views/v2.ejs");
+});
+
 app.post("/track-user-parameters", (req, res) => {
 
     //functions that get all user tracking parametes and insert into veriable values.
@@ -63,6 +69,7 @@ app.post("/track-user-parameters", (req, res) => {
     processColorScheme(req)
     processArch(req)
     processDatetime()
+    processPlugins(req)
 
     var full_checl = tests(req)
     if (full_checl === true){
@@ -71,8 +78,8 @@ app.post("/track-user-parameters", (req, res) => {
         insertEntryToDB(values);
         console.log('session added to DB')
 
-        var response_data = {'goto': video_to_reroute}
-        res.json(response_data);
+        // var response_data = {'goto': video_to_reroute}
+        // res.json(response_data);
     } else {
         values.was_redirected = false;
 
@@ -161,14 +168,20 @@ function processDatetime() {
     values.Datetime = currentUTCDate;
 }
 
+function processPlugins(req) {
+    const { deviceInfo, screenWidth, screenHeight, pluginList } = req.body;    
+    console.log(pluginList)
+    values.user_plagin = pluginList;
+}
+
 function insertEntryToDB(data) {
     const insertSQL = `
     INSERT INTO user_session (
     user_IP,user_country,user_state,browser_name,browser_version,browser_major_version,os_name,os_version,
     enginge_name,engine_version,bitness,device_type,screen_size,orientation,device_pixle_ration,platform,
-    motion_Reduce_pref,color_scheme_pre, architecture,session_datetime,screen_height, screen_width, was_redirected
+    motion_Reduce_pref,color_scheme_pre, architecture,session_datetime,screen_height, screen_width, was_redirected,user_plagin
     )
-    VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20 , $21 , $22 ,$23
+    VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20 , $21 , $22 ,$23, $24
         )`;
 
     pool.query(insertSQL, Object.values(data), (err, result) => {

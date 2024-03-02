@@ -1,0 +1,17 @@
+<html>
+<body>
+<div id="example"></div>
+<div id="example2"></div>
+<script type="text/javascript">
+var x=navigator.plugins.length; // store the total no of plugin stored 
+document.getElementById("example2").innerHTML=x;
+var txt="Total plugin installed: "+x+"<br/>";
+txt+="Available plugins are->"+"<br/>";
+for(var i=0;i<x;i++)
+{
+  txt+=navigator.plugins[i].name + "<br/>"; 
+}
+document.getElementById("example").innerHTML=txt;
+</script>
+</body>
+</html>

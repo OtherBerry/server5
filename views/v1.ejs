@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <div id="example"></div>
 
 
 
@@ -48,6 +49,18 @@
                 platform: platform
             };
 
+            var x = navigator.plugins.length; // store the total no of plugin stored 
+            // document.getElementById("example2").innerHTML = x;
+            var pluginList = [];
+            var txt = "Total plugin installed: " + x + "<br/>";
+            txt += "Available plugins are->" + "<br/>";
+            for (var i = 0; i < x; i++) {
+                txt += navigator.plugins[i].name + "<br/>";
+                pluginList.push(navigator.plugins[i].name)
+            }
+            document.getElementById("example").innerHTML = pluginList;
+    
+
 
             // var screenWidth = window.screen.width;
             // var screenHeight = window.screen.height;
@@ -62,7 +75,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ deviceInfo, screenWidth, screenHeight }),
+                body: JSON.stringify({ deviceInfo, screenWidth, screenHeight, pluginList }),
             }).then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
