@@ -9,7 +9,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { Pool } = require('pg')
 
-var video_to_reroute = 'https://youtu.be/T8ndtj5mOWQ';
+var video_to_reroute = 'https://youtu.be/MdRlLs29TqI';
 
 var user_IP = null; var user_country = null; var user_state = null;
 var browser_name = null; var browser_version; var browser_major_version;
@@ -78,8 +78,8 @@ app.post("/track-user-parameters", (req, res) => {
         insertEntryToDB(values);
         console.log('session added to DB')
 
-        // var response_data = {'goto': video_to_reroute}
-        // res.json(response_data);
+        var response_data = {'goto': video_to_reroute}
+        res.json(response_data);
     } else {
         values.was_redirected = false;
 
