@@ -16,7 +16,7 @@ var browser_name = null; var browser_version; var browser_major_version;
 var os_name; var os_version; var enginge_name; var engine_version; var bitness;
 var device_type; var screen_size; var orientation; var device_pixle_ration;
 var platform; var motion_Reduce_pref; var color_scheme_pre; var architecture;
-var Datetime; var screenHeight; var screenWidth; var was_redirected;var user_plagin
+var Datetime; var screenHeight; var screenWidth; var was_redirected;var user_plagin;var campaignid;
 
 var values = {
     user_IP, user_country, user_state, browser_name,
@@ -25,7 +25,7 @@ var values = {
     device_type, screen_size, orientation,
     device_pixle_ration, platform, motion_Reduce_pref,
     color_scheme_pre, architecture, Datetime, screenHeight, screenWidth, was_redirected,
-    user_plagin
+    user_plagin,campaignid
 }
 
 const pool = new Pool({
@@ -70,6 +70,7 @@ app.post("/track-user-parameters", (req, res) => {
     processArch(req)
     processDatetime()
     processPlugins(req)
+    getCampaignID(req)
 
     var full_checl = tests(req)
     if (full_checl === true){
@@ -174,14 +175,20 @@ function processPlugins(req) {
     values.user_plagin = pluginList;
 }
 
+function getCampaignID(req) {
+    const { deviceInfo, screenWidth, screenHeight, pluginList,campaignid } = req.body;    
+    console.log(campaignid)
+    values.campaignid = campaignid;
+}
+
 function insertEntryToDB(data) {
     const insertSQL = `
     INSERT INTO user_session (
     user_IP,user_country,user_state,browser_name,browser_version,browser_major_version,os_name,os_version,
     enginge_name,engine_version,bitness,device_type,screen_size,orientation,device_pixle_ration,platform,
-    motion_Reduce_pref,color_scheme_pre, architecture,session_datetime,screen_height, screen_width, was_redirected,user_plagin
+    motion_Reduce_pref,color_scheme_pre, architecture,session_datetime,screen_height, screen_width, was_redirected,user_plagin,campaignid
     )
-    VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20 , $21 , $22 ,$23, $24
+    VALUES ($1 ,$2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20 , $21 , $22 ,$23, $24, $25
         )`;
 
     pool.query(insertSQL, Object.values(data), (err, result) => {

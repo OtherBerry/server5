@@ -16,6 +16,16 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
 
+
+            const queryString = window.location.search;
+            console.log(queryString);
+            const urlParams = new URLSearchParams(queryString);
+            
+            const campaignid = urlParams.get('campaignid')
+            console.log(campaignid);
+
+
+
             var url_string = window.location.href;
 
             if (/Mobi|Android/i.test(navigator.userAgent)) {
@@ -59,7 +69,7 @@
                 pluginList.push(navigator.plugins[i].name)
             }
             // document.getElementById("example").innerHTML = pluginList;
-    
+
 
 
             // var screenWidth = window.screen.width;
@@ -75,7 +85,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ deviceInfo, screenWidth, screenHeight, pluginList }),
+                body: JSON.stringify({ deviceInfo, screenWidth, screenHeight, pluginList ,campaignid }),
             }).then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
